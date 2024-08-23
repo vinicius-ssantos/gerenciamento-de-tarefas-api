@@ -1,0 +1,26 @@
+version: '3.8'
+services:
+
+  postgres-gerenciamento_de_tarefas:
+    image: postgres:15-alpine
+    container_name: postgres_gerenciamento_de_tarefas_db
+    restart: no
+    environment:
+      ROOT_PASSWORD: root_password
+      POSTGRES_USER: viniciussantos
+      POSTGRES_PASSWORD: usuario_senha
+      POSTGRES_DB: gerenciamento-de-tarefas
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+      - ./init-db-pg.sql:/docker-entrypoint-initdb.d/init-db-pg.sql
+    networks:
+      - app-network
+
+volumes:
+  pg-data:
+
+networks:
+  app-network:
+    driver: bridge
