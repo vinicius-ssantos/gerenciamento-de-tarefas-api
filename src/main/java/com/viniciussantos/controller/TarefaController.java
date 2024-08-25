@@ -29,9 +29,9 @@ public class TarefaController {
     }
 
     @PutMapping("put/tarefas/alocar/{id}")
-    public ResponseEntity<?> alocarPessoa(@Valid @RequestBody TarefaRequest tarefaRequest,
+    public ResponseEntity<?> alocarPessoa(@Valid @RequestBody PessoaRequest pessoaRequest,
                                           @PathVariable Long id) {
-        TarefaResponse tarefaResponse = tarefaService.AlocarPessoa(tarefaRequest, id);
+        TarefaResponse tarefaResponse = tarefaService.AlocarPessoa(pessoaRequest, id);
         return new ResponseEntity<>(tarefaResponse, HttpStatus.OK);
     }
 }

@@ -9,9 +9,6 @@ import com.viniciussantos.model.Tarefa;
 import com.viniciussantos.repository.PessoaRepository;
 import com.viniciussantos.repository.TarefaRepository;
 import com.viniciussantos.service.TarefaService;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,12 +33,20 @@ public class TarefaServiceImpl implements TarefaService {
     }
 
     @Override
-    public TarefaResponse AlocarPessoa(TarefaRequest tarefaRequest, Long id) {
+    public TarefaResponse AlocarPessoa(PessoaRequest pessoaRequest, Long id) {
         var tarefaDB = buscarPorId(id);
-        if (tarefaRequest.getDepartamento() != tarefaDB.getDepartamento()) {
+        Pessoa pessoaDB = pessoaRepository.getReferenceById(pessoaRequest.getId());
+
+        System.out.println("DEPARTAMENTO TAREFA: "+tarefaDB.getDepartamento());
+        System.out.println("##############################################");
+        System.out.println("DEPARTAMENTO PESSOA: "+pessoaDB.getDepartamento());
+
+        if (!tarefaDB.getDepartamento().equals(pessoaRequest.getDepartamento())) {
             throw new DepartamentoMismatchException("Departamento da tarefa não corresponde ao departamento da pessoa");
         }
-        tarefaDB.setPessoaAlocada(tarefaRequest.getPessoaAlocada());
+
+        tarefaDB.setPessoaAlocada(pessoaRequestToPessoa(pessoaRequest));
+
 
         Tarefa tarefaSalva = tarefaRepository.save(tarefaResponseToTarefa(tarefaDB));
 
@@ -110,5 +115,12 @@ public class TarefaServiceImpl implements TarefaService {
         tarefa.setStatus(tarefaResponse.getStatus());
         return tarefa;
     }
-
+    public Pessoa pessoaRequestToPessoa(PessoaRequest pessoaRequest) {
+        Pessoa pessoa = new Pessoa();
+        pessoa.setId(pessoaRequest.getId());
+        pessoa.setNome(pessoaRequest.getNome());
+        pessoa.setDepartamento(pessoaRequest.getDepartamento());
+        pessoa.setTarefas(pessoaRequest.getTarefas());
+        return pessoa;
+    }
 }

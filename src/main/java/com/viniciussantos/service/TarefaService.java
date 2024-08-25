@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface TarefaService {
     TarefaResponse adicionarTarefa(TarefaRequest tarefaRequest);
-    TarefaResponse AlocarPessoa( TarefaRequest tarefaRequest,Long id);
+    TarefaResponse AlocarPessoa( PessoaRequest pessoaRequest,Long id);
 
 
     public List<TarefaResponse> listar();
