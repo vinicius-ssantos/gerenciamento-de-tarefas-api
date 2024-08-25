@@ -34,4 +34,10 @@ public class TarefaController {
         TarefaResponse tarefaResponse = tarefaService.AlocarPessoa(pessoaRequest, id);
         return new ResponseEntity<>(tarefaResponse, HttpStatus.OK);
     }
+
+    @PutMapping("put/tarefas/finalizar/{id}")
+    public ResponseEntity<?> finalizarTarefa(@PathVariable Long id) {
+        TarefaResponse tarefaResponse = tarefaService.finalizarTarefa(id);
+        return new ResponseEntity<>(tarefaResponse, HttpStatus.OK);
+    }
 }

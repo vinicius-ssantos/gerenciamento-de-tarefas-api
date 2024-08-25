@@ -3,6 +3,7 @@ package com.viniciussantos.service.impl;
 import com.viniciussantos.dto.request.PessoaRequest;
 import com.viniciussantos.dto.request.TarefaRequest;
 import com.viniciussantos.dto.response.TarefaResponse;
+import com.viniciussantos.enums.Status;
 import com.viniciussantos.exception.DepartamentoMismatchException;
 import com.viniciussantos.model.Pessoa;
 import com.viniciussantos.model.Tarefa;
@@ -25,7 +26,6 @@ public class TarefaServiceImpl implements TarefaService {
     public PessoaRepository pessoaRepository;
 
 
-
     @Override
     public TarefaResponse adicionarTarefa(TarefaRequest tarefaRequest) {
         Tarefa tarefa = tarefaRequestToTarefa(tarefaRequest);
@@ -36,22 +36,25 @@ public class TarefaServiceImpl implements TarefaService {
     public TarefaResponse AlocarPessoa(PessoaRequest pessoaRequest, Long id) {
         var tarefaDB = buscarPorId(id);
         Pessoa pessoaDB = pessoaRepository.getReferenceById(pessoaRequest.getId());
-
-        System.out.println("DEPARTAMENTO TAREFA: "+tarefaDB.getDepartamento());
+        System.out.println("DEPARTAMENTO TAREFA: " + tarefaDB.getDepartamento());
         System.out.println("##############################################");
-        System.out.println("DEPARTAMENTO PESSOA: "+pessoaDB.getDepartamento());
-
+        System.out.println("DEPARTAMENTO PESSOA: " + pessoaDB.getDepartamento());
         if (!tarefaDB.getDepartamento().equals(pessoaRequest.getDepartamento())) {
             throw new DepartamentoMismatchException("Departamento da tarefa não corresponde ao departamento da pessoa");
         }
-
         tarefaDB.setPessoaAlocada(pessoaRequestToPessoa(pessoaRequest));
-
-
         Tarefa tarefaSalva = tarefaRepository.save(tarefaResponseToTarefa(tarefaDB));
-
         return tarefaToTarefaResponse(tarefaSalva);
     }
+
+    @Override
+    public TarefaResponse finalizarTarefa(Long id) {
+        var tarefaDB = buscarPorId(id);
+        tarefaDB.setStatus(Status.COMPLETO.getStatus());
+        Tarefa tarefaSalva = tarefaRepository.save(tarefaResponseToTarefa(tarefaDB));
+        return tarefaToTarefaResponse(tarefaSalva);
+    }
+
 
     @Override
     public List<TarefaResponse> listar() {
@@ -115,6 +118,7 @@ public class TarefaServiceImpl implements TarefaService {
         tarefa.setStatus(tarefaResponse.getStatus());
         return tarefa;
     }
+
     public Pessoa pessoaRequestToPessoa(PessoaRequest pessoaRequest) {
         Pessoa pessoa = new Pessoa();
         pessoa.setId(pessoaRequest.getId());
