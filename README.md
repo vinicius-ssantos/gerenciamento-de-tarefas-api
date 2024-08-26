@@ -1,8 +1,3 @@
-Vou extrair as informações relevantes do arquivo que você enviou para criar o README solicitado. Isso pode levar um momento.
-
-Com base na estrutura do projeto que extraí, vou criar um README básico para o seu projeto, incluindo os endpoints principais, tecnologias usadas, padrões seguidos, e a estrutura do projeto.
-
----
 
 # Gerenciamento de Tarefas API
 
