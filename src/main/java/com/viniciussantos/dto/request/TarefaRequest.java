@@ -9,6 +9,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.Duration;
+import java.time.LocalDate;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -18,9 +21,9 @@ public class TarefaRequest {
     private Long id;
     private String titulo;
     private String descricao;
-    private String prazo;
+    private LocalDate prazo;
     private String departamento;
-    private String duracao;
+    private Integer duracao;
     private Pessoa pessoaAlocada; // TODO  nao é necessario ter no Post da requisicao
     private String status ;
 

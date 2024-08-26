@@ -7,10 +7,12 @@ import com.viniciussantos.model.Pessoa;
 import com.viniciussantos.service.PessoaService;
 import com.viniciussantos.service.impl.PessoaServiceImpl;
 import jakarta.validation.Valid;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -49,6 +51,14 @@ public class PessoaController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    @GetMapping("get/pessoas/gastos")
+    public ResponseEntity<Double> getMediaHorasGastas(
+            @RequestParam String nome,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInicial,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataFinal) {
+        double mediaHoras = pessoaService.calcularMediaHoras(nome, dataInicial, dataFinal);
+        return ResponseEntity.ok(mediaHoras);
+    }
 
 
 }

@@ -4,10 +4,14 @@ package com.viniciussantos.model;
 import com.viniciussantos.enums.Status;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.time.Duration;
+import java.time.LocalDate;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -28,14 +32,15 @@ public class Tarefa {
     private String descricao;
 
 
-    @NotBlank(message = "O prazo da tarefa é obrigatório.")
-    private String prazo;
+   @NotNull(message = "O prazo da tarefa é obrigatório.")
+    private LocalDate prazo;
 
     @NotBlank(message = "O departamento da tarefa é obrigatório.")
     private String departamento;
 
-    @NotBlank(message = "A duração da tarefa é obrigatória.")
-    private String duracao;
+
+    @NotNull(message = "A duração da tarefa é obrigatória.")
+    private Integer duracao;
 
     @ManyToOne()
     @JoinColumn(name = "pessoa_id")

@@ -1,22 +1,35 @@
 package com.viniciussantos.service.impl;
 
 import com.viniciussantos.dto.request.PessoaRequest;
+import com.viniciussantos.dto.response.PessoaListaTarefaResponse;
 import com.viniciussantos.dto.response.PessoaResponse;
+import com.viniciussantos.dto.response.TarefaResponse;
 import com.viniciussantos.exception.RecursoNaoEncontradoException;
 import com.viniciussantos.model.Pessoa;
+import com.viniciussantos.model.Tarefa;
 import com.viniciussantos.repository.PessoaRepository;
+import com.viniciussantos.repository.TarefaRepository;
 import com.viniciussantos.service.PessoaService;
+import com.viniciussantos.service.TarefaService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+
 
 @Service
 public class PessoaServiceImpl implements PessoaService {
+    @Autowired
+    public TarefaService tarefaService;
+    @Autowired
     public PessoaRepository pessoaRepository;
+    @Autowired
+    public TarefaRepository tarefaRepository;
 
-    public PessoaServiceImpl(PessoaRepository pessoaRepository) {
-        this.pessoaRepository = pessoaRepository;
-    }
 
     @Override
     public PessoaResponse adicionarPessoa(PessoaRequest pessoaRequest) {
@@ -56,6 +69,35 @@ public class PessoaServiceImpl implements PessoaService {
         return pessoaToPessoaResponse(pessoaAtualizada);
 
     }
+
+    @Override
+    public List<PessoaListaTarefaResponse> listarTarefas(Long id) {
+        PessoaResponse pessoaResponse = buscarPorId(id);
+        return pessoaResponse.getTarefas().stream()
+                .map(tarefa -> new PessoaListaTarefaResponse(
+                        tarefa.getId(),
+                        tarefa.getTitulo(),
+                        tarefa.getDescricao(),
+                        tarefa.getPrazo(),
+                        tarefa.getDepartamento(),
+                        tarefa.getDuracao(),
+                        tarefa.getStatus()))
+                .collect(Collectors.toList());
+    }
+
+    public double calcularMediaHoras(String nome, LocalDate dataInicial, LocalDate dataFinal) {
+        List<Tarefa> tarefas = tarefaRepository.findByPessoaNomeAndPeriodo(nome, dataInicial, dataFinal);
+        double totalHoras = 0;
+        int count = 0;
+
+        for (Tarefa tarefa : tarefas) {
+            totalHoras += tarefa.getDuracao(); // Assumindo que 'duracao' é o tempo gasto em horas.
+            count++;
+        }
+
+        return count == 0 ? 0 : totalHoras / count;
+    }
+
 
     @Override
     public void deletar(Long id) {

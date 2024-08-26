@@ -43,7 +43,19 @@ public class TarefaServiceImpl implements TarefaService {
             throw new DepartamentoMismatchException("Departamento da tarefa não corresponde ao departamento da pessoa");
         }
         tarefaDB.setPessoaAlocada(pessoaRequestToPessoa(pessoaRequest));
+        pessoaDB.getTarefas().add(tarefaResponseToTarefa(tarefaDB));
+        pessoaRepository.save(pessoaDB);
         Tarefa tarefaSalva = tarefaRepository.save(tarefaResponseToTarefa(tarefaDB));
+
+        pessoaDB.getTarefas().forEach(tarefa -> {
+            System.out.println("TAREFA ID : " + tarefa.getId());
+            System.out.println("TAREFA: " + tarefa.getTitulo());
+            System.out.println("PESSOA: " + tarefa.getPessoa().getNome());
+            System.out.println("DEPARTAMENTO: " + tarefa.getDepartamento());
+            System.out.println("STATUS: " + tarefa.getStatus());
+            System.out.println("##############################################");
+        });
+
         return tarefaToTarefaResponse(tarefaSalva);
     }
 
@@ -127,4 +139,7 @@ public class TarefaServiceImpl implements TarefaService {
         pessoa.setTarefas(pessoaRequest.getTarefas());
         return pessoa;
     }
+
+
+
 }
